@@ -1,6 +1,8 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, globalShortcut }
+  = require('electron');
 const path = require('path');
 const menu = require('./menu.js');
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -8,17 +10,27 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+
 const createWindow = () => {
+  // console.log(path.join(__dirname, 'preload.js'))
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   Menu.setApplicationMenu(menu);
+
+  // Register Global Shortcuts
+  globalShortcut.register('CommandOrControl+S', () => {
+    console.log("Saving the file!");
+  })
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools({ mode: 'detach' });
@@ -48,3 +60,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+ipcMain.on('editor-reply', (event, arg) => {
+  console.log(`Received reply from web page: ${arg}`);
+})
