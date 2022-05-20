@@ -13,6 +13,8 @@ window.api.receive((event, arg) => {
     editor.toggleItalic();
   } else if (arg === 'toggle-strike') {
     editor.toggleStrikethrough();
+  } else if (arg === 'save') {
+    window.api.save(editor.value);
   }
 });
 

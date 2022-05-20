@@ -8,15 +8,14 @@ const { ipcRenderer, contextBridge } = require('electron');
 //   return ipcRenderer.on;
 // }
 
-
 contextBridge.exposeInMainWorld('api', {
   receive: function (func) {
-    ipcRenderer.on("editor-event", (event, ...args) => func(event, ...args));
+    ipcRenderer.on('editor-event', (event, ...args) => func(event, ...args));
   },
   send: function (msg) {
     ipcRenderer.send('editor-reply', msg);
-  }
+  },
+  save: function (content) {
+    ipcRenderer.send('save-content', content);
+  },
 });
-
-
-
