@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.send('editor-reply', msg);
   },
   save: function (content) {
-    ipcRenderer.send('save-content', content);
+    console.log('content: ' + content);
+    ipcRenderer.send('save', content);
   },
 });
